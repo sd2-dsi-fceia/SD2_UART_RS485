@@ -44,14 +44,14 @@
 /*==================[internal data declaration]==============================*/
 static const board_gpioInfo_type board_gpioLeds[] =
 {
-    {PORTE, GPIOE, 29},    /* LED ROJO */
-    {PORTD, GPIOD, 5},    /* LED VERDE */
+    {PORTE, GPIOE, 29},     /* LED ROJO */
+    {PORTD, GPIOD, 5},      /* LED VERDE */
 };
 
 static const board_gpioInfo_type board_gpioSw[] =
 {
-    {PORTC, GPIOC, 3},    /* SW1 */
-    {PORTC, GPIOC, 12},    /* SW3 */
+    {PORTC, GPIOC, 3},      /* SW1 */
+    {PORTC, GPIOC, 12},     /* SW3 */
 };
 
 /*==================[internal functions declaration]=========================*/

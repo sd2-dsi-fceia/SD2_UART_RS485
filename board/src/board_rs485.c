@@ -43,15 +43,15 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define RS485_TX_PORT        PORTE
+#define RS485_TX_PORT       PORTE
 #define RS485_TX_PIN        0
 
-#define RS485_RX_PORT        PORTE
+#define RS485_RX_PORT       PORTE
 #define RS485_RX_PIN        1
 
-#define RS485_UART                    UART1
-#define RS485_UART_IRQn                UART1_IRQn
-#define RS485_kSimClockGateUart        kSimClockGateUart1
+#define RS485_UART                  UART1
+#define RS485_UART_IRQn             UART1_IRQn
+#define RS485_kSimClockGateUart     kSimClockGateUart1
 
 /*==================[internal data declaration]==============================*/
 static const board_gpioInfo_type board_gpioContLine[] =
