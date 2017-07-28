@@ -39,14 +39,14 @@
 
 typedef enum
 {
-	EST_PUL_ESPERANDO_ACTIVACION = 0,
-	EST_PUL_ESPERANDO_DESACTIVACION,
+    EST_PUL_ESPERANDO_ACTIVACION = 0,
+    EST_PUL_ESPERANDO_DESACTIVACION,
 }estPul_enum;
 
 typedef struct
 {
-	estPul_enum estSW1;
-	unsigned eventSW:1;
+    estPul_enum estSW1;
+    unsigned eventSW:1;
 }varsKey_struct;
 
 /*==================[internal data declaration]==============================*/
@@ -65,55 +65,55 @@ varsKey_struct varsKey[BOARD_SW_ID_TOTAL];
 
 void key_init(void)
 {
-	int32_t i;
-	for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
-	{
-		varsKey[i].estSW1 = EST_PUL_ESPERANDO_ACTIVACION;
-		varsKey[i].eventSW = 0;
-	}
+    int32_t i;
+    for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
+    {
+        varsKey[i].estSW1 = EST_PUL_ESPERANDO_ACTIVACION;
+        varsKey[i].eventSW = 0;
+    }
 }
 
 bool key_getEvent(board_swId_enum id)
 {
-	bool ret = false;
+    bool ret = false;
 
-	if (varsKey[id].eventSW)
-	{
-		varsKey[id].eventSW = 0;
-		ret = true;
-	}
+    if (varsKey[id].eventSW)
+    {
+        varsKey[id].eventSW = 0;
+        ret = true;
+    }
 
-	return ret;
+    return ret;
 }
 
 void key_periodicTask1ms(void)
 {
-	int32_t i;
+    int32_t i;
 
-	for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
-	{
-		switch (varsKey[i].estSW1)
-		{
-			case EST_PUL_ESPERANDO_ACTIVACION:
-				if (board_swGet(i))
-				{
-					varsKey[i].eventSW = 1;
-					varsKey[i].estSW1 = EST_PUL_ESPERANDO_DESACTIVACION;
-				}
-				break;
+    for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
+    {
+        switch (varsKey[i].estSW1)
+        {
+            case EST_PUL_ESPERANDO_ACTIVACION:
+                if (board_swGet(i))
+                {
+                    varsKey[i].eventSW = 1;
+                    varsKey[i].estSW1 = EST_PUL_ESPERANDO_DESACTIVACION;
+                }
+                break;
 
-			case EST_PUL_ESPERANDO_DESACTIVACION:
-				if (!board_swGet(i))
-				{
-					varsKey[i].estSW1 = EST_PUL_ESPERANDO_ACTIVACION;
-				}
-				break;
+            case EST_PUL_ESPERANDO_DESACTIVACION:
+                if (!board_swGet(i))
+                {
+                    varsKey[i].estSW1 = EST_PUL_ESPERANDO_ACTIVACION;
+                }
+                break;
 
-			default:
-				varsKey[i].estSW1 = EST_PUL_ESPERANDO_ACTIVACION;
-				break;
-		}
-	}
+            default:
+                varsKey[i].estSW1 = EST_PUL_ESPERANDO_ACTIVACION;
+                break;
+        }
+    }
 }
 
 

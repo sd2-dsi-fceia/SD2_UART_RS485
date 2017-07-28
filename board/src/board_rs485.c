@@ -43,21 +43,21 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define RS485_TX_PORT		PORTE
-#define RS485_TX_PIN		0
+#define RS485_TX_PORT        PORTE
+#define RS485_TX_PIN        0
 
-#define RS485_RX_PORT		PORTE
-#define RS485_RX_PIN		1
+#define RS485_RX_PORT        PORTE
+#define RS485_RX_PIN        1
 
-#define RS485_UART					UART1
-#define RS485_UART_IRQn				UART1_IRQn
-#define RS485_kSimClockGateUart		kSimClockGateUart1
+#define RS485_UART                    UART1
+#define RS485_UART_IRQn                UART1_IRQn
+#define RS485_kSimClockGateUart        kSimClockGateUart1
 
 /*==================[internal data declaration]==============================*/
 static const board_gpioInfo_type board_gpioContLine[] =
 {
-	{PORTA, GPIOA, 16},	/* RE */
-	{PORTA, GPIOA, 17},	/* DE */
+    {PORTA, GPIOA, 16},    /* RE */
+    {PORTA, GPIOA, 17},    /* DE */
 };
 
 static bool dataAvailable;
@@ -73,34 +73,34 @@ static uint8_t byteRec;
 
 static void rs485_RE(bool est)
 {
-	if (est)
-		GPIO_HAL_SetPinOutput(board_gpioContLine[0].gpio, board_gpioContLine[0].pin);
-	else
-		GPIO_HAL_ClearPinOutput(board_gpioContLine[0].gpio, board_gpioContLine[0].pin);
+    if (est)
+        GPIO_HAL_SetPinOutput(board_gpioContLine[0].gpio, board_gpioContLine[0].pin);
+    else
+        GPIO_HAL_ClearPinOutput(board_gpioContLine[0].gpio, board_gpioContLine[0].pin);
 }
 
 static void rs485_DE(bool est)
 {
-	if (est)
-		GPIO_HAL_SetPinOutput(board_gpioContLine[1].gpio, board_gpioContLine[1].pin);
-	else
-		GPIO_HAL_ClearPinOutput(board_gpioContLine[1].gpio, board_gpioContLine[1].pin);
+    if (est)
+        GPIO_HAL_SetPinOutput(board_gpioContLine[1].gpio, board_gpioContLine[1].pin);
+    else
+        GPIO_HAL_ClearPinOutput(board_gpioContLine[1].gpio, board_gpioContLine[1].pin);
 }
 
 /*==================[external functions definition]==========================*/
 void board_rs485_init(void)
 {
-	int32_t i;
-	uint32_t frecPerifUart;
+    int32_t i;
+    uint32_t frecPerifUart;
 
-	dataAvailable = false;
+    dataAvailable = false;
 
     /* inicialización de pines de control */
     for (i = 0 ; i < 2 ; i++)
-	{
-    	PORT_HAL_SetMuxMode(board_gpioContLine[i].port, board_gpioContLine[i].pin, kPortMuxAsGpio);
-    	GPIO_HAL_SetPinDir(board_gpioContLine[i].gpio, board_gpioContLine[i].pin, kGpioDigitalOutput);
-	}
+    {
+        PORT_HAL_SetMuxMode(board_gpioContLine[i].port, board_gpioContLine[i].pin, kPortMuxAsGpio);
+        GPIO_HAL_SetPinDir(board_gpioContLine[i].gpio, board_gpioContLine[i].pin, kGpioDigitalOutput);
+    }
 
     rs485_RE(false);
     rs485_DE(false);
@@ -110,76 +110,76 @@ void board_rs485_init(void)
 
     SIM_HAL_EnableClock(SIM, RS485_kSimClockGateUart);
 
-	UART_HAL_Init(RS485_UART);
+    UART_HAL_Init(RS485_UART);
 
-	UART_HAL_EnableTransmitter(RS485_UART);
+    UART_HAL_EnableTransmitter(RS485_UART);
 
-	UART_HAL_EnableReceiver(RS485_UART);
+    UART_HAL_EnableReceiver(RS485_UART);
 
-	CLOCK_SYS_GetFreq(kBusClock, &frecPerifUart);
+    CLOCK_SYS_GetFreq(kBusClock, &frecPerifUart);
 
-	UART_HAL_SetBaudRate(RS485_UART, frecPerifUart, 9600);
+    UART_HAL_SetBaudRate(RS485_UART, frecPerifUart, 9600);
 
-	UART_HAL_SetBitCountPerChar(RS485_UART, kUart8BitsPerChar);
+    UART_HAL_SetBitCountPerChar(RS485_UART, kUart8BitsPerChar);
 
-	UART_HAL_SetParityMode(RS485_UART, kUartParityDisabled);
+    UART_HAL_SetParityMode(RS485_UART, kUartParityDisabled);
 
-	UART_HAL_SetStopBitCount(RS485_UART, kUartOneStopBit);
+    UART_HAL_SetStopBitCount(RS485_UART, kUartOneStopBit);
 
-	UART_HAL_SetIntMode(RS485_UART, kUartIntRxDataRegFull, true);
+    UART_HAL_SetIntMode(RS485_UART, kUartIntRxDataRegFull, true);
 
-	NVIC_ClearPendingIRQ(RS485_UART_IRQn);
-	NVIC_EnableIRQ(RS485_UART_IRQn);
+    NVIC_ClearPendingIRQ(RS485_UART_IRQn);
+    NVIC_EnableIRQ(RS485_UART_IRQn);
 }
 
 void board_rs485_sendByte(uint8_t dato)
 {
-	rs485_RE(true);
-	rs485_DE(true);
+    rs485_RE(true);
+    rs485_DE(true);
 
-	UART_HAL_Putchar(RS485_UART, dato);
+    UART_HAL_Putchar(RS485_UART, dato);
 
-	UART_HAL_SetIntMode(RS485_UART, kUartIntTxDataRegEmpty, true);
-	UART_HAL_SetIntMode(RS485_UART, kUartIntTxComplete, true);
+    UART_HAL_SetIntMode(RS485_UART, kUartIntTxDataRegEmpty, true);
+    UART_HAL_SetIntMode(RS485_UART, kUartIntTxComplete, true);
 
 }
 
 bool board_rs485_isDataAvailable(void)
 {
-	return dataAvailable;
+    return dataAvailable;
 }
 
 uint8_t board_rs485_readByte(void)
 {
-	dataAvailable = false;
-	return byteRec;
+    dataAvailable = false;
+    return byteRec;
 }
 
 void UART1_IRQHandler(void)
 {
-	if (UART_HAL_GetStatusFlag(RS485_UART, kUartRxDataRegFull) &&
-		UART_HAL_GetIntMode(RS485_UART, kUartIntRxDataRegFull))
-	{
-		UART_HAL_Getchar(RS485_UART, &byteRec);
-		dataAvailable = true;
-		UART_HAL_ClearStatusFlag(RS485_UART, kUartRxDataRegFull);
-	}
+    if (UART_HAL_GetStatusFlag(RS485_UART, kUartRxDataRegFull) &&
+        UART_HAL_GetIntMode(RS485_UART, kUartIntRxDataRegFull))
+    {
+        UART_HAL_Getchar(RS485_UART, &byteRec);
+        dataAvailable = true;
+        UART_HAL_ClearStatusFlag(RS485_UART, kUartRxDataRegFull);
+    }
 
-	if (UART_HAL_GetStatusFlag(RS485_UART, kUartTxDataRegEmpty) &&
-		UART_HAL_GetIntMode(RS485_UART, kUartIntTxDataRegEmpty))
-	{
-		UART_HAL_SetIntMode(RS485_UART, kUartIntTxDataRegEmpty, false);
-		UART_HAL_ClearStatusFlag(RS485_UART, kUartTxDataRegEmpty);
-	}
+    if (UART_HAL_GetStatusFlag(RS485_UART, kUartTxDataRegEmpty) &&
+        UART_HAL_GetIntMode(RS485_UART, kUartIntTxDataRegEmpty))
+    {
+        UART_HAL_SetIntMode(RS485_UART, kUartIntTxDataRegEmpty, false);
+        UART_HAL_ClearStatusFlag(RS485_UART, kUartTxDataRegEmpty);
+    }
 
-	if (UART_HAL_GetStatusFlag(RS485_UART, kUartTxComplete) &&
-	    UART_HAL_GetIntMode(RS485_UART, kUartIntTxComplete))
-	{
-		UART_HAL_ClearStatusFlag(RS485_UART, kUartTxComplete);
-		UART_HAL_SetIntMode(RS485_UART, kUartIntTxComplete, false);
-		rs485_RE(false);
-		rs485_DE(false);
-	}
+    if (UART_HAL_GetStatusFlag(RS485_UART, kUartTxComplete) &&
+        UART_HAL_GetIntMode(RS485_UART, kUartIntTxComplete))
+    {
+        UART_HAL_ClearStatusFlag(RS485_UART, kUartTxComplete);
+        UART_HAL_SetIntMode(RS485_UART, kUartIntTxComplete, false);
+        rs485_RE(false);
+        rs485_DE(false);
+    }
 }
 
 /*==================[end of file]============================================*/

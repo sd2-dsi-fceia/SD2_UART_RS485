@@ -48,30 +48,30 @@ extern "C" {
 
 typedef enum
 {
-	BOARD_LED_ID_ROJO = 0,
-	BOARD_LED_ID_VERDE,
-	BOARD_LED_ID_TOTAL
+    BOARD_LED_ID_ROJO = 0,
+    BOARD_LED_ID_VERDE,
+    BOARD_LED_ID_TOTAL
 }board_ledId_enum;
 
 typedef enum
 {
-	BOARD_SW_ID_1 = 0,
-	BOARD_SW_ID_3,
-	BOARD_SW_ID_TOTAL
+    BOARD_SW_ID_1 = 0,
+    BOARD_SW_ID_3,
+    BOARD_SW_ID_TOTAL
 }board_swId_enum;
 
 typedef enum
 {
-	BOARD_LED_MSG_OFF = 0,
-	BOARD_LED_MSG_ON,
-	BOARD_LED_MSG_TOGGLE
+    BOARD_LED_MSG_OFF = 0,
+    BOARD_LED_MSG_ON,
+    BOARD_LED_MSG_TOGGLE
 }board_ledMsg_enum;
 
 typedef struct
 {
-	PORT_Type *port;
-	GPIO_Type *gpio;
-	uint32_t pin;
+    PORT_Type *port;
+    GPIO_Type *gpio;
+    uint32_t pin;
 }board_gpioInfo_type;
 
 /*==================[typedef]================================================*/

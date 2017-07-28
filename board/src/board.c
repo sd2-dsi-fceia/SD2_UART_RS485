@@ -44,14 +44,14 @@
 /*==================[internal data declaration]==============================*/
 static const board_gpioInfo_type board_gpioLeds[] =
 {
-	{PORTE, GPIOE, 29},	/* LED ROJO */
-	{PORTD, GPIOD, 5},	/* LED VERDE */
+    {PORTE, GPIOE, 29},    /* LED ROJO */
+    {PORTD, GPIOD, 5},    /* LED VERDE */
 };
 
 static const board_gpioInfo_type board_gpioSw[] =
 {
-	{PORTC, GPIOC, 3},	/* SW1 */
-	{PORTC, GPIOC, 12},	/* SW3 */
+    {PORTC, GPIOC, 3},    /* SW1 */
+    {PORTC, GPIOC, 12},    /* SW3 */
 };
 
 /*==================[internal functions declaration]=========================*/
@@ -65,7 +65,7 @@ static const board_gpioInfo_type board_gpioSw[] =
 /*==================[external functions definition]==========================*/
 void board_init(void)
 {
-	int32_t i;
+    int32_t i;
 
     /* Activación de clock para los puertos utilizados */
     SIM_HAL_EnableClock(SIM, kSimClockGatePortA);
@@ -75,46 +75,46 @@ void board_init(void)
 
     /* inicialización de leds */
     for (i = 0 ; i < BOARD_LED_ID_TOTAL ; i++)
-	{
-    	PORT_HAL_SetMuxMode(board_gpioLeds[i].port, board_gpioLeds[i].pin, kPortMuxAsGpio);
-    	board_ledSet(i, BOARD_LED_MSG_OFF);
-    	GPIO_HAL_SetPinDir(board_gpioLeds[i].gpio, board_gpioLeds[i].pin, kGpioDigitalOutput);
-	}
+    {
+        PORT_HAL_SetMuxMode(board_gpioLeds[i].port, board_gpioLeds[i].pin, kPortMuxAsGpio);
+        board_ledSet(i, BOARD_LED_MSG_OFF);
+        GPIO_HAL_SetPinDir(board_gpioLeds[i].gpio, board_gpioLeds[i].pin, kGpioDigitalOutput);
+    }
 
     /* inicialización de SWs */
-	for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
-	{
-		PORT_HAL_SetMuxMode(board_gpioSw[i].port, board_gpioSw[i].pin, kPortMuxAsGpio);
-		GPIO_HAL_SetPinDir(board_gpioSw[i].gpio, board_gpioSw[i].pin, kGpioDigitalInput);
-		PORT_HAL_SetPullCmd(board_gpioSw[i].port, board_gpioSw[i].pin, true);
-		PORT_HAL_SetPullMode(board_gpioSw[i].port, board_gpioSw[i].pin, kPortPullUp);
-	}
+    for (i = 0 ; i < BOARD_SW_ID_TOTAL ; i++)
+    {
+        PORT_HAL_SetMuxMode(board_gpioSw[i].port, board_gpioSw[i].pin, kPortMuxAsGpio);
+        GPIO_HAL_SetPinDir(board_gpioSw[i].gpio, board_gpioSw[i].pin, kGpioDigitalInput);
+        PORT_HAL_SetPullCmd(board_gpioSw[i].port, board_gpioSw[i].pin, true);
+        PORT_HAL_SetPullMode(board_gpioSw[i].port, board_gpioSw[i].pin, kPortPullUp);
+    }
 }
 
 void board_ledSet(board_ledId_enum id, board_ledMsg_enum msg)
 {
-	switch (msg)
-	{
-		case BOARD_LED_MSG_OFF:
-			GPIO_HAL_SetPinOutput(board_gpioLeds[id].gpio, board_gpioLeds[id].pin);
-			break;
+    switch (msg)
+    {
+        case BOARD_LED_MSG_OFF:
+            GPIO_HAL_SetPinOutput(board_gpioLeds[id].gpio, board_gpioLeds[id].pin);
+            break;
 
-		case BOARD_LED_MSG_ON:
-			GPIO_HAL_ClearPinOutput(board_gpioLeds[id].gpio, board_gpioLeds[id].pin);
-			break;
+        case BOARD_LED_MSG_ON:
+            GPIO_HAL_ClearPinOutput(board_gpioLeds[id].gpio, board_gpioLeds[id].pin);
+            break;
 
-		case BOARD_LED_MSG_TOGGLE:
-			GPIO_HAL_TogglePinOutput(board_gpioLeds[id].gpio, board_gpioLeds[id].pin);
-			break;
+        case BOARD_LED_MSG_TOGGLE:
+            GPIO_HAL_TogglePinOutput(board_gpioLeds[id].gpio, board_gpioLeds[id].pin);
+            break;
 
-		default:
-			break;
-	}
+        default:
+            break;
+    }
 }
 
 bool board_swGet(board_swId_enum id)
 {
-	return !GPIO_HAL_ReadPinInput(board_gpioSw[id].gpio, board_gpioSw[id].pin);
+    return !GPIO_HAL_ReadPinInput(board_gpioSw[id].gpio, board_gpioSw[id].pin);
 }
 
 /*==================[end of file]============================================*/

@@ -58,15 +58,15 @@ static int32_t timeDown1ms;
 
 void PIT_Init(void)
 {
-	uint32_t frecPerif;
+    uint32_t frecPerif;
 
-	SIM_HAL_EnableClock(SIM, kSimClockGatePit0);
-	PIT_HAL_Enable(PIT);
-	CLOCK_SYS_GetFreq(kBusClock, &frecPerif);
-	PIT_HAL_SetTimerPeriodByCount(PIT, 1, frecPerif/1000);
-	PIT_HAL_SetIntCmd(PIT, 1, true);
-	PIT_HAL_SetTimerRunInDebugCmd(PIT, false);
-	PIT_HAL_StartTimer(PIT, 1);
+    SIM_HAL_EnableClock(SIM, kSimClockGatePit0);
+    PIT_HAL_Enable(PIT);
+    CLOCK_SYS_GetFreq(kBusClock, &frecPerif);
+    PIT_HAL_SetTimerPeriodByCount(PIT, 1, frecPerif/1000);
+    PIT_HAL_SetIntCmd(PIT, 1, true);
+    PIT_HAL_SetTimerRunInDebugCmd(PIT, false);
+    PIT_HAL_StartTimer(PIT, 1);
     NVIC_ClearPendingIRQ(PIT_IRQn);
     NVIC_EnableIRQ(PIT_IRQn);
 }
@@ -83,41 +83,41 @@ int main(void)
 
     while(1)
     {
-    	if (key_getEvent(BOARD_SW_ID_1))
-    		board_rs485_sendByte('E');
+        if (key_getEvent(BOARD_SW_ID_1))
+            board_rs485_sendByte('E');
 
-    	if (key_getEvent(BOARD_SW_ID_3))
-    		board_rs485_sendByte('A');
+        if (key_getEvent(BOARD_SW_ID_3))
+            board_rs485_sendByte('A');
 
-    	if (board_rs485_isDataAvailable())
-    	{
-    		uint8_t dataRec;
+        if (board_rs485_isDataAvailable())
+        {
+            uint8_t dataRec;
 
-    		dataRec = board_rs485_readByte();
+            dataRec = board_rs485_readByte();
 
-    		if (dataRec == 'E')
-    			board_ledSet(BOARD_LED_ID_ROJO, BOARD_LED_MSG_ON);
+            if (dataRec == 'E')
+                board_ledSet(BOARD_LED_ID_ROJO, BOARD_LED_MSG_ON);
 
-    		if (dataRec == 'A')
-    			board_ledSet(BOARD_LED_ID_ROJO, BOARD_LED_MSG_OFF);
-    	}
+            if (dataRec == 'A')
+                board_ledSet(BOARD_LED_ID_ROJO, BOARD_LED_MSG_OFF);
+        }
 
-    	if (timeDown1ms == 0)
-		{
-    		timeDown1ms = 200;
-			board_ledSet(BOARD_LED_ID_VERDE, BOARD_LED_MSG_TOGGLE);
-		}
+        if (timeDown1ms == 0)
+        {
+            timeDown1ms = 200;
+            board_ledSet(BOARD_LED_ID_VERDE, BOARD_LED_MSG_TOGGLE);
+        }
     }
 }
 
 void PIT_IRQHandler(void)
 {
-	PIT_HAL_ClearIntFlag(PIT, 1);
+    PIT_HAL_ClearIntFlag(PIT, 1);
 
-	if (timeDown1ms)
-		timeDown1ms--;
+    if (timeDown1ms)
+        timeDown1ms--;
 
-	key_periodicTask1ms();
+    key_periodicTask1ms();
 }
 
 
