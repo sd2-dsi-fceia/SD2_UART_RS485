@@ -83,10 +83,10 @@ int main(void)
 
     while(1)
     {
-        if (key_getEvent(BOARD_SW_ID_1))
+        if (key_getPressEv(BOARD_SW_ID_1))
             board_rs485_sendByte('E');
 
-        if (key_getEvent(BOARD_SW_ID_3))
+        if (key_getPressEv(BOARD_SW_ID_3))
             board_rs485_sendByte('A');
 
         if (board_rs485_isDataAvailable())
@@ -96,16 +96,16 @@ int main(void)
             dataRec = board_rs485_readByte();
 
             if (dataRec == 'E')
-                board_ledSet(BOARD_LED_ID_ROJO, BOARD_LED_MSG_ON);
+                board_setLed(BOARD_LED_ID_ROJO, BOARD_LED_MSG_ON);
 
             if (dataRec == 'A')
-                board_ledSet(BOARD_LED_ID_ROJO, BOARD_LED_MSG_OFF);
+                board_setLed(BOARD_LED_ID_ROJO, BOARD_LED_MSG_OFF);
         }
 
         if (timeDown1ms == 0)
         {
             timeDown1ms = 200;
-            board_ledSet(BOARD_LED_ID_VERDE, BOARD_LED_MSG_TOGGLE);
+            board_setLed(BOARD_LED_ID_VERDE, BOARD_LED_MSG_TOGGLE);
         }
     }
 }

@@ -51,7 +51,7 @@ extern "C" {
 
 /*==================[external functions definition]==========================*/
 void key_init(void);
-bool key_getEvent(board_swId_enum id);
+bool key_getPressEv(board_swId_enum id);
 void key_periodicTask1ms(void);
 
 
